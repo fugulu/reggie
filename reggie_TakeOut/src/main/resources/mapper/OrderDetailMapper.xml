@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace名称空间，名称空间代表该xml文件映射是哪个接口-->
+<mapper namespace = "com.itheima.reggie.mapper.OrderDetailMapper">
+
+    <!--添加多条订单明细-->
+    <insert id = "addBatch">
+         INSERT INTO order_detail VALUES
+        <foreach collection="orderDetails" item="detail" separator=",">
+        (#{detail.id},#{detail.name},#{detail.image},#{detail.orderId},#{detail.dishId},
+    #{detail.setmealId},#{detail.dishFlavor},#{detail.number},#{detail.amount})
+        </foreach>
+    </insert>
+</mapper>

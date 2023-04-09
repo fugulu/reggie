@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.reggie.mapper.SetmealMapper">
+
+    <!-- 通过套餐名字，查询套餐和分类名字 -->
+    <select id="findByName" resultType="com.itheima.reggie.dto.SetmealDto">
+        SELECT s.*, c.name categoryName FROM setmeal s INNER JOIN category c ON s.category_id = c.id
+        <if test="name!=null and name!=''">
+            WHERE s.`name` LIKE "%"#{name}"%"
+        </if>
+    </select>
+
+    <!--
+    删除前判断这些套餐是否在销售 (统计所有即将删除的套餐中status为1的数量)
+    foreach：
+        collection：要遍历的集合或数组
+        open:  遍历前添加的符号
+        separator: 每次遍历添加的符号
+        item：每个元素的变量名
+        close: 遍历结束添加的符号
+    -->
+    <select id="findSetmealCountByStatus" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM setmeal WHERE `status`=#{status} AND id IN 
+        <foreach collection="ids" open="(" separator="," item="id" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 删除多个套餐 -->
+    <delete id="deleteByIds">
+        DELETE FROM setmeal WHERE id IN
+        <foreach collection="ids" open="(" separator="," item="id" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

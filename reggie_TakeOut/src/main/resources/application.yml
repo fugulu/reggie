@@ -1,0 +1,87 @@
+spring:
+  shardingsphere:
+    datasource:
+      # -- 这里的开发代码没有提示 --
+      names:
+        master,slave
+      # 主数据源
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.24.129:3306/reggie?characterEncoding=utf-8
+        username: root
+        password: 990127
+      # 从数据源
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.24.130:3306/reggie?characterEncoding=utf-8
+        username: root
+        password: 990127
+    # -- 下面部分是有开发提示的 --
+    masterslave:
+      # 读写分离配置
+      load-balance-algorithm-type: round_robin #轮询
+      # 最终的数据源名称 ，这个数据源存储在spring容器中的名字
+      name: dataSource
+      # 主库数据源名称
+      master-data-source-name: master
+      # 从库数据源名称列表，多个逗号分隔
+      slave-data-source-names: slave
+    props:
+      sql:
+        show: true #开启SQL显示，默认false
+  main:
+      # 后面创建数据源会覆盖前面创建的数据源，之前的数据源配置注释了也没有用
+      allow-bean-definition-overriding: true
+  cache:
+    redis:
+      time-to-live: 1800000 #设置缓存数据的过期时间，单位：毫秒
+  # 应用程序名字
+  application:
+    name: reggie_take_out
+  # 数据源配置
+  #datasource:
+    #druid:
+      #driver-class-name: com.mysql.jdbc.Driver
+      #url: jdbc:mysql://localhost:3306/reggie?useSSL=false&characterEncoding=utf8
+      #username: root
+      #password: 990127
+  # 修改文件上传最大尺寸
+  servlet:
+    multipart:
+      # 修改文件上传大小，默认是1MB
+      max-file-size: 2MB
+  #redis配置
+  redis:
+    host: 192.168.24.129
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 10
+        min-idle: 5
+# mybatis配置
+mybatis:
+  configuration:
+    # 显示SQL语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 开启驼峰命名
+    map-underscore-to-camel-case: true
+  # 给实体类包名起别名，如果有多个包，使用逗号分隔开
+  type-aliases-package: com.itheima.reggie.entity,com.itheima.reggie.dto
+  # 指定映射文件所在的目录
+  mapper-locations: classpath:mapper/*.xml
+# 分页组件配置
+pagehelper:
+  # 指定使用哪种数据库
+  helper-dialect: mysql
+  # 合理化分页：
+  # true 页码小于第1页返回第1页的数据，如果大于最后1页返回最后1页的数据
+  # false 如果小于第1页或大于最后1页则不返回任何数据
+  reasonable: true
+# 上传图片目录
+reggie:
+  path: /usr/local/img/
+
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace = "com.itheima.reggie.mapper.SetmealMapper">
+    <!--根据id更新-->
+    <update id="updateById">
+        update setmeal
+        <set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="categoryId!=null">
+                category_id=#{categoryId},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="code!=null and code!=''">
+                code=#{code},
+            </if>
+            <if test="image!=null and image!=''">
+                image=#{image},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime},
+            </if>
+            <if test="updateUser!=null">
+                update_user = #{updateUser},
+            </if>
+        </set>
+            where id=#{id}
+    </update>
+
+    <!--模糊查询套餐和分类名字，并且按照更新时间降序排序-->
+    <select id = "findByName" resultType="SetmealDto">
+        SELECT s.*,c.name categoryName FROM setmeal s INNER JOIN category c ON s.category_id=c.id
+            <if test="name!=null and name!=''">
+                WHERE s.name LIKE "%"#{name}"%"
+            </if>
+            ORDER BY s.update_time DESC
+    </select>
+
+    <!--查询所有删除的套餐中，起售/禁售的数量-->
+    <select id="findSetmealCountByStatus" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM setmeal WHERE `status`=#{status} AND id in
+        <foreach collection = "ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id = "deleteByIds">
+        delete from setmeal where id in
+        <foreach collection = "ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

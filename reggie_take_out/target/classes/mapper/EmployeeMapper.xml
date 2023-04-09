@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itheima.reggie.mapper.EmployeeMapper">
+    <!-- 修改员工：创建人和创建时间可以不修改 -->
+    <update id="update">
+        UPDATE
+        employee
+        <set>
+            <if test="name!=null and name!=''">
+                `name` = #{name},
+            </if>
+            <if test="username!=null and username!=''">
+                username = #{username},
+            </if>
+            <if test="password!=null and password!=''">
+                `password` = #{password},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex},
+            </if>
+            <if test="idNumber!=null and idNumber!=''">
+                id_number = #{idNumber},
+            </if>
+            <if test="status!=null">
+                `status` = #{status},
+            </if>
+            <if test="updateTime!=null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser!=null">
+                update_user = #{updateUser}
+            </if>
+            <if test="email!=null and email!=''" >
+                email = #{email}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 按名字模糊查询所有员工记录 -->
+    <select id="findByName" resultType="Employee">
+        select * from employee
+        <if test="name!=null and name!=''">
+            where name like "%"#{name}"%"
+        </if>
+    </select>
+</mapper>

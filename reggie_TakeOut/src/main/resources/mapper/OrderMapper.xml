@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace = "com.itheima.reggie.mapper.OrderMapper">
+
+    <!-- 条件查询所有订单 -->
+    <select id = "list" resultType="orders">
+        select * from orders
+        <where>
+            <if test="orderId!=null and orderId!=''">
+                id like concat('%',#{orderId,'%'})
+            </if>
+            <if test="beginTime!=null and beginTime!=''">
+                and #{beginTime} &lt;= order_time
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and #{endTime} >= order_time
+            </if>
+        </where>
+    </select>
+</mapper>
