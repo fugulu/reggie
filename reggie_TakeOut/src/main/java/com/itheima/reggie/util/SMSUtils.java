@@ -24,7 +24,7 @@ public class SMSUtils {
      */
     public static String sendMessage(String signName, String templateCode, String phoneNumbers, String code) {
         //这里需要修改发送短信的ID和密码
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI5tGTWQVaJ3rtcsQMMDRu", "PFo2dxvPSt77M8aoAo8jhaH9CCjgo7");
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "client_id", "client_secret");
         IAcsClient client = new DefaultAcsClient(profile);
 
         SendSmsRequest request = new SendSmsRequest();
